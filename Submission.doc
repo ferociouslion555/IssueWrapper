@@ -1,0 +1,40 @@
+﻿<html><head><title>Submission</title></head><body><h1>IssueWrapper - GitHub Issues Service</h1>
+<p><strong>Repository Name:</strong> <a href="https://github.com/saliherenyuzbazzozlu/IssueWrapper">saliherenyuzbazzozlu/IssueWrapper</a>
+<strong>Student Name:</strong> Salih Eren Yüzbaşıoğlu</p>
+<hr />
+<h2>1. Summary of the Implementation</h2>
+<p>This project implements a web service that wraps the GitHub REST API for Issues, conforming strictly to the assignment specifications and 12-factor app design principles. The service was built using <strong>Java 21</strong> and <strong>Spring Boot 3.3.4</strong>, utilizing <code>WebClient</code> for reactive external API calls and an embedded H2 database to persist webhook events. </p>
+<h3>Key Features Implemented:</h3>
+<ul>
+<li><strong>CRUD on Issues:</strong> The service provides fully functioning endpoints to create issues (<code>POST /issues</code>), read issues with pagination (<code>GET /issues</code> and <code>GET /issues/{number}</code>), update issues (<code>PATCH /issues/{number}</code>), and add comments (<code>POST /issues/{number}/comments</code>).</li>
+<li><strong>Webhook Handling &amp; Validation:</strong> Implemented a <code>/webhook</code> endpoint that accepts <code>issues</code> and <code>issue_comment</code> payloads. It uses the <code>WEBHOOK_SECRET</code> to compute and verify the <code>X-Hub-Signature-256</code> HMAC via a constant-time comparison. Valid events are saved to the database.</li>
+<li><strong>Error Mapping:</strong> A <code>@ControllerAdvice</code> global exception handler intercepts GitHub API errors (e.g., 401, 403, 404) and maps them to a clear JSON error response for the client.</li>
+<li><strong>Pagination Propagation:</strong> When listing issues, the <code>Link</code> headers from GitHub are properly extracted and forwarded back to the client.</li>
+<li><strong>Health Check &amp; Observability:</strong> Implemented a simple <code>/healthz</code> endpoint.</li>
+<li><strong>OpenAPI 3.1 Contract:</strong> Automated OpenAPI specification generation using <code>springdoc</code>. The <code>openapi.yaml</code> contract maps all inputs, schemas, and endpoints.</li>
+<li><strong>Docker Support:</strong> Includes a multi-stage <code>Dockerfile</code> and <code>docker-compose.yml</code> to package and run the application in a portable container.</li>
+</ul>
+<hr />
+<h2>2. Design Notes &amp; Trade-offs</h2>
+<ul>
+<li><strong>Error Mapping:</strong> The application leverages Spring's <code>@ExceptionHandler</code> to globally catch <code>WebClientResponseException</code> instances. Instead of letting the application crash or return a generic 500 error, it parses GitHub's specific error payload (or raw string) and returns a structured JSON mapping to the client alongside the original HTTP status code.</li>
+<li><strong>Pagination Strategy:</strong> Rather than reimplementing pagination logic manually, the application acts as an intelligent proxy. It accepts <code>page</code> and <code>per_page</code> query parameters, passes them directly to GitHub, and extracts GitHub's <code>Link</code> response headers (which contain the standard next/prev URLs). It then injects these <code>Link</code> headers back into the client's HTTP response.</li>
+<li><strong>Webhook Deduplication:</strong> To ensure idempotency, the application stores the <code>X-GitHub-Delivery</code> ID in the H2 database. Before processing a new webhook, it performs a lookup; if the delivery ID is already present, it skips processing and safely returns <code>204 No Content</code>.</li>
+<li><strong>Security Trade-offs:</strong> The <code>WEBHOOK_SECRET</code> is never logged. If the user fails to provide one in the <code>.env</code> file, the service employs a fail-safe mechanism to securely generate a 32-byte cryptographic secret at runtime. This prevents the application from booting in an insecure state. Verification uses <code>MessageDigest.isEqual</code> to prevent timing attacks.</li>
+</ul>
+<hr />
+<h2>3. UI Screenshots &amp; Proof of Execution</h2>
+<h3>A. Unit Tests Passing</h3>
+<p><em>The following demonstrates that the automated unit test suite executes and passes successfully.</em></p>
+<p><img alt="Test Output" src="C:/Users/algos/.gemini/antigravity-ide/brain/9f3fffcf-40fe-4bf6-b94d-dc9020e25805/.user_uploaded/media_1788586009854.png" /></p>
+<h3>B. Application Startup (Docker/Maven)</h3>
+<p><em>The following demonstrates the application starting successfully, extracting the repository name, and generating the webhook secret.</em></p>
+<h3>C. GitHub Webhook Configuration</h3>
+<p><em>The following shows the Webhook configured in the GitHub repository settings, actively pointing to the secure tunnel.</em></p>
+<p><img alt="Webhook Settings" src="C:/Users/algos/.gemini/antigravity-ide/brain/9f3fffcf-40fe-4bf6-b94d-dc9020e25805/.user_uploaded/media_1788586059948.png" /></p>
+<h3>D. API Test: Fetching Issues (GET /issues)</h3>
+<p><em>The following demonstrates a successful API call to the application, retrieving issues from the configured GitHub repository.</em></p>
+<p><img alt="API Test" src="C:/Users/algos/.gemini/antigravity-ide/brain/9f3fffcf-40fe-4bf6-b94d-dc9020e25805/.user_uploaded/media_1788586129757.png" /></p>
+<h3>E. Webhook Delivery Success</h3>
+<p><em>The following demonstrates the webhook payload successfully being processed by the application's <code>/webhook</code> endpoint.</em></p>
+<p><img alt="Webhook Delivery" src="C:/Users/algos/.gemini/antigravity-ide/brain/9f3fffcf-40fe-4bf6-b94d-dc9020e25805/.user_uploaded/media_1788586129741.png" /></p></body></html>

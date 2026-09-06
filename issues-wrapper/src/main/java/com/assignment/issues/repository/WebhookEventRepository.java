@@ -1,4 +1,4 @@
-// Author: Salih Eren Yuzbazzozlu
+﻿// Author: Salih Eren Yüzbaşıoğlu
 package com.assignment.issues.repository;
 
 import com.assignment.issues.entity.WebhookEvent;

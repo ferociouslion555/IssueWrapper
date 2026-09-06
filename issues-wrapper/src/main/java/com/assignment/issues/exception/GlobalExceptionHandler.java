@@ -1,4 +1,4 @@
-// Author: Salih Eren Yuzbazzozlu
+﻿// Author: Salih Eren Yüzbaşıoğlu
 package com.assignment.issues.exception;
 
 import org.springframework.http.HttpStatus;
