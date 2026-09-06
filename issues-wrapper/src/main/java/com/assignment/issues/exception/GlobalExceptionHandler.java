@@ -1,4 +1,4 @@
-﻿// Author: Salih Eren Yüzbaşıoğlu
+// Author: Salih Eren Yüzbaşıoğlu
 package com.assignment.issues.exception;
 
 import org.springframework.http.HttpStatus;
@@ -22,6 +22,18 @@ public class GlobalExceptionHandler {
         body.put("status", ex.getStatusCode().value());
         body.put("error", "GitHub API Error");
         body.put("message", ex.getResponseBodyAsString());
+        
+        // Rate limit mapping
+        if (ex.getStatusCode().value() == 429 || ex.getStatusCode().value() == 403) {
+            String retryAfter = ex.getResponseHeaders().getFirst("Retry-After");
+            if (retryAfter != null) {
+                body.put("retry_after", retryAfter);
+            }
+            String rateLimitReset = ex.getResponseHeaders().getFirst("X-RateLimit-Reset");
+            if (rateLimitReset != null) {
+                body.put("x_ratelimit_reset", rateLimitReset);
+            }
+        }
         
         return new ResponseEntity<>(body, ex.getStatusCode());
     }
