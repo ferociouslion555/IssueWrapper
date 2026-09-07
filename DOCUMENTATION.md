@@ -1,7 +1,7 @@
 ﻿# IssueWrapper - GitHub Issues Service
 
 **Repository Name:** [saliherenyuzbazzozlu/IssueWrapper](https://github.com/saliherenyuzbazzozlu/IssueWrapper)
-**Student Name:** Salih Eren Yüzbaşıoğlu
+**Student Name:** Salih Eren Yüzbaşıoğlu, Ameya Mathew
 
 ---
 
