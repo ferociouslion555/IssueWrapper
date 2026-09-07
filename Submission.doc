@@ -1,6 +1,6 @@
 ﻿<html><head><title>Submission</title></head><body><h1>IssueWrapper - GitHub Issues Service</h1>
 <p><strong>Repository Name:</strong> <a href="https://github.com/saliherenyuzbazzozlu/IssueWrapper">saliherenyuzbazzozlu/IssueWrapper</a>
-<strong>Student Name:</strong> Salih Eren Yüzbaşıoğlu</p>
+<strong>Student Name:</strong> Salih Eren Yüzbaşıoğlu, Ameya Mathew</p>
 <hr />
 <h2>1. Summary of the Implementation</h2>
 <p>This project implements a web service that wraps the GitHub REST API for Issues, conforming strictly to the assignment specifications and 12-factor app design principles. The service was built using <strong>Java 21</strong> and <strong>Spring Boot 3.3.4</strong>, utilizing <code>WebClient</code> for reactive external API calls and an embedded H2 database to persist webhook events. </p>
